@@ -20,7 +20,10 @@ let movePos = 0;
 let hop = 0;
 let pipe1Move = 0;
 let pipe2Move = 0;
+let innerPipe1Move = 0;
+let innerPipe2Move = 0;
 let multiPipesMove = 0;
+
 let gravity = 0;
 
 let isjumping = false;
@@ -39,7 +42,17 @@ const movePipes = setInterval(() => {
         pipe2Move = -175;
     }
 
+    //detect hit
+    if(pipe2Move > 200 && pipe2Move < 300 && birdie.getClientRects()[0].y < 118) {
+        alert('hit');
+        clearInterval(movePipes);
+        clearInterval(setGravity);
+        pressing = true;
+    }
+
     multiPipesMove +=1;
+    innerPipe1Move +=1;
+    innerPipe2Move +=1;
     pipe1Move +=1;
     pipe2Move +=1;
     pipeWrapper.style.right = `${multiPipesMove}px`;
@@ -83,7 +96,7 @@ function fall () {
 
 document.addEventListener('keydown', (e) => {
     if(e.repeat) return;
-
+    console.log( birdie.getClientRects()[0].y);
     if(e.code==='Space' && !isjumping) {
         jump();
         pressing = true;
