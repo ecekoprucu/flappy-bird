@@ -24,6 +24,7 @@ let multiPipesMove = 0;
 let gravity = 0;
 
 let isjumping = false;
+let pressing = false;
 
 const movePipes = setInterval(() => {
     if(multiPipesMove > 300) {
@@ -71,7 +72,7 @@ function fall () {
     const birdDown = setInterval(() => {
         hop -= 2;
         isjumping = false;
-        if(hop < 0) {
+        if(hop < 1) {
             clearInterval(birdDown);
         }
         birdPosTop = birdPosTop - hop;
@@ -81,7 +82,16 @@ function fall () {
 }
 
 document.addEventListener('keydown', (e) => {
+    if(e.repeat) return;
+
     if(e.code==='Space' && !isjumping) {
         jump();
+        pressing = true;
     }
-})
+});
+
+document.addEventListener('keyup', (e) => {
+    if(e.code==='Space') {
+        pressing = false;
+    }
+});
