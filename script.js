@@ -13,17 +13,17 @@ const innerPipe2 = document.getElementById('inner-pipe-2');
 
 const pipeWrapper = document.getElementById('pipe-wrapper');
 
-console.log(innerPipe1.getClientRects()[0].x);
-console.log(innerPipe2.getClientRects()[0].x);
 
 let birdPosTop = birdPosY;
 
 let movePos = 0;
 let hop = 0;
-let isJumping = false;
 let pipe1Move = 0;
 let pipe2Move = 0;
 let multiPipesMove = 0;
+let gravity = 0;
+
+let isjumping = false;
 
 const movePipes = setInterval(() => {
     if(multiPipesMove > 300) {
@@ -46,35 +46,42 @@ const movePipes = setInterval(() => {
     pipe2.style.right = `${pipe2Move}px`;
 }, 20)
 
+const setGravity = setInterval(() => {
+        if(!isjumping) {
+            gravity += 2;
+            birdie.style.marginTop = `${gravity}px`;
+        }
+}, 100)
+
 function jump () {
     const birdUp = setInterval(() => {
-        hop += 8;
-        isJumping = true;
-        if(hop > 30) {
+        hop += 2;
+        isjumping = true;
+        if(hop > 4) {
             clearInterval(birdUp);
             fall();
         }
-
-        birdie.style.marginBottom = `${hop}px`;
+        birdPosTop = birdPosTop - hop;
+        birdie.style.top = `${birdPosTop}px`;
         birdie.style.transform = `rotate(-45deg)`;
     }, 50);
 }
 
 function fall () {
     const birdDown = setInterval(() => {
-        hop -= 8;
-
-        if(hop < 8) {
-            isJumping = false;
+        hop -= 2;
+        isjumping = false;
+        if(hop < 0) {
             clearInterval(birdDown);
         }
-        birdie.style.marginBottom = `${hop}px`;
+        birdPosTop = birdPosTop - hop;
+        birdie.style.top = `${birdPosTop}px`;
         birdie.style.transform = `rotate(5deg)`;
     }, 50);
 }
 
 document.addEventListener('keydown', (e) => {
-    if(e.code==='Space' && !isJumping) {
+    if(e.code==='Space' && !isjumping) {
         jump();
     }
 })
