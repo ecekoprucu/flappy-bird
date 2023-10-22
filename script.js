@@ -30,6 +30,7 @@ let isjumping = false;
 let gameOver = false;
 
 function handleGameOver () {
+    // TODO: Change to getBoundingClientRect X
     if(pipe2Move > 200 && pipe2Move < 300 && birdie.getClientRects()[0].y < 118) {
         console.log('hit pipe 2');
         alert('Game Over');
@@ -38,7 +39,7 @@ function handleGameOver () {
         gameOver = true;
         return true;
     }
-
+    // TODO: Change to getBoundingClientRect X
     if(pipe1Move > 200 && pipe1Move < 300 && birdie.getClientRects()[0].y > 200) {
         console.log('hit pipe 1');
         alert('Game Over');
@@ -48,6 +49,23 @@ function handleGameOver () {
         return true;
     }
 
+    if(innerPipe1.getClientRects()[0].x > 0 && innerPipe1.getClientRects()[0].x < 50 && birdie.getClientRects()[0].y < 118) {
+        console.log('hit inner pipe 1');
+        alert('Game Over');
+        clearInterval(movePipes);
+        clearInterval(setGravity);
+        gameOver = true;
+        return true;
+    }
+    
+    if(innerPipe2.getClientRects()[0].x > 0 && innerPipe2.getClientRects()[0].x < 50 && birdie.getClientRects()[0].y > 200) {
+        console.log('hit inner pipe 2');
+        alert('Game Over');
+        clearInterval(movePipes);
+        clearInterval(setGravity);
+        gameOver = true;
+        return true;
+    }
 }
 
 const movePipes = setInterval(() => {
@@ -64,7 +82,6 @@ const movePipes = setInterval(() => {
     }
 
     //detect hit
-
     if(handleGameOver()) {
         return;
     }
