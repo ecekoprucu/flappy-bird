@@ -27,7 +27,28 @@ let multiPipesMove = 0;
 let gravity = 0;
 
 let isjumping = false;
-let pressing = false;
+let gameOver = false;
+
+function handleGameOver () {
+    if(pipe2Move > 200 && pipe2Move < 300 && birdie.getClientRects()[0].y < 118) {
+        console.log('hit pipe 2');
+        alert('Game Over');
+        clearInterval(movePipes);
+        clearInterval(setGravity);
+        gameOver = true;
+        return true;
+    }
+
+    if(pipe1Move > 200 && pipe1Move < 300 && birdie.getClientRects()[0].y > 200) {
+        console.log('hit pipe 1');
+        alert('Game Over');
+        clearInterval(movePipes);
+        clearInterval(setGravity);
+        gameOver = true;
+        return true;
+    }
+
+}
 
 const movePipes = setInterval(() => {
     if(multiPipesMove > 300) {
@@ -43,13 +64,11 @@ const movePipes = setInterval(() => {
     }
 
     //detect hit
-    if(pipe2Move > 200 && pipe2Move < 300 && birdie.getClientRects()[0].y < 118) {
-        alert('hit');
-        clearInterval(movePipes);
-        clearInterval(setGravity);
-        pressing = true;
-    }
 
+    if(handleGameOver()) {
+        return;
+    }
+    
     multiPipesMove +=1;
     innerPipe1Move +=1;
     innerPipe2Move +=1;
@@ -61,13 +80,16 @@ const movePipes = setInterval(() => {
 }, 20)
 
 const setGravity = setInterval(() => {
-        if(!isjumping) {
+        if(!isjumping && !gameOver) {
             gravity += 2;
             birdie.style.marginTop = `${gravity}px`;
         }
 }, 100)
 
 function jump () {
+
+    if(gameOver) return;
+
     const birdUp = setInterval(() => {
         hop += 2;
         isjumping = true;
@@ -82,6 +104,9 @@ function jump () {
 }
 
 function fall () {
+    
+    if(gameOver) return;
+
     const birdDown = setInterval(() => {
         hop -= 2;
         isjumping = false;
@@ -96,15 +121,8 @@ function fall () {
 
 document.addEventListener('keydown', (e) => {
     if(e.repeat) return;
-    console.log( birdie.getClientRects()[0].y);
-    if(e.code==='Space' && !isjumping) {
-        jump();
-        pressing = true;
-    }
-});
 
-document.addEventListener('keyup', (e) => {
-    if(e.code==='Space') {
-        pressing = false;
+    if(e.code==='Space' && !isjumping && !gameOver) {
+        jump();
     }
 });
