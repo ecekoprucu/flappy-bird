@@ -28,10 +28,10 @@ let gravity = 0;
 
 let isjumping = false;
 let gameOver = false;
+let motionState = 'idle'; 
 
 function handleGameOver () {
-    // TODO: Change to getBoundingClientRect X
-    if(pipe2Move > 200 && pipe2Move < 300 && birdie.getClientRects()[0].y < 118) {
+    if(pipe2.getClientRects()[0].x > 0 && pipe2.getClientRects()[0].x < 50 && birdie.getClientRects()[0].y < 110) {
         console.log('hit pipe 2');
         alert('Game Over');
         clearInterval(movePipes);
@@ -39,8 +39,7 @@ function handleGameOver () {
         gameOver = true;
         return true;
     }
-    // TODO: Change to getBoundingClientRect X
-    if(pipe1Move > 200 && pipe1Move < 300 && birdie.getClientRects()[0].y > 200) {
+    if(pipe1.getClientRects()[0].x > 0 && pipe1.getClientRects()[0].x < 50 && birdie.getClientRects()[0].y > 200) {
         console.log('hit pipe 1');
         alert('Game Over');
         clearInterval(movePipes);
@@ -49,7 +48,7 @@ function handleGameOver () {
         return true;
     }
 
-    if(innerPipe1.getClientRects()[0].x > 0 && innerPipe1.getClientRects()[0].x < 50 && birdie.getClientRects()[0].y < 118) {
+    if(innerPipe1.getClientRects()[0].x > 0 && innerPipe1.getClientRects()[0].x < 50 && birdie.getClientRects()[0].y < 110) {
         console.log('hit inner pipe 1');
         alert('Game Over');
         clearInterval(movePipes);
@@ -105,13 +104,16 @@ const setGravity = setInterval(() => {
 
 function jump () {
 
-    if(gameOver) return;
+    if(motionState !== 'idle' || gameOver) return;
+    
+    motionState = 'jumping';
 
     const birdUp = setInterval(() => {
         hop += 2;
         isjumping = true;
         if(hop > 4) {
             clearInterval(birdUp);
+            motionState = 'falling';
             fall();
         }
         birdPosTop = birdPosTop - hop;
@@ -122,13 +124,14 @@ function jump () {
 
 function fall () {
     
-    if(gameOver) return;
+    if(motionState !== 'falling' || gameOver) return;
 
     const birdDown = setInterval(() => {
         hop -= 2;
         isjumping = false;
         if(hop < 1) {
             clearInterval(birdDown);
+            motionState = 'idle';
         }
         birdPosTop = birdPosTop - hop;
         birdie.style.top = `${birdPosTop}px`;
@@ -139,7 +142,7 @@ function fall () {
 document.addEventListener('keydown', (e) => {
     if(e.repeat) return;
 
-    if(e.code==='Space' && !isjumping && !gameOver) {
+    if(e.code==='Space' && !isjumping && motionState === 'idle' && !gameOver) {
         jump();
     }
 });
