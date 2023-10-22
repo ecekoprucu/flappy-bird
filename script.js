@@ -20,8 +20,6 @@ let movePos = 0;
 let hop = 0;
 let pipe1Move = 0;
 let pipe2Move = 0;
-let innerPipe1Move = 0;
-let innerPipe2Move = 0;
 let multiPipesMove = 0;
 
 let gravity = 0;
@@ -86,8 +84,6 @@ const movePipes = setInterval(() => {
     }
     
     multiPipesMove +=1;
-    innerPipe1Move +=1;
-    innerPipe2Move +=1;
     pipe1Move +=1;
     pipe2Move +=1;
     pipeWrapper.style.right = `${multiPipesMove}px`;
